@@ -1,0 +1,169 @@
+<div class="landing">
+
+  <!-- HERO + FEATURES + CTA: SOLO INVITADOS -->
+  <ng-container *ngIf="!auth.isLoggedIn()">
+    <!-- HERO -->
+    <section class="hero full-bleed">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Gestiona tus tareas de forma inteligente</h1>
+          <p>
+            Este es un gestor de tareas con usuarios como proyecto para un diplomado (registro/login con JWT)
+            construido en Angular + Node + MongoDB.
+          </p>
+
+          <div class="tech-stack">
+            <div class="tech-item">
+              <div class="tech-icon"><i class="fab fa-angular" aria-hidden="true"></i></div>
+              <span>Angular</span>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon"><i class="fab fa-node-js" aria-hidden="true"></i></div>
+              <span>Node.js</span>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon"><i class="fas fa-database" aria-hidden="true"></i></div>
+              <span>MongoDB</span>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon"><i class="fas fa-lock" aria-hidden="true"></i></div>
+              <span>JWT</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" (click)="goNext()">
+            Comenzar Ahora
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features full-bleed">
+      <div class="container">
+        <div class="section-title">
+          <h2>¿Qué puedes hacer aquí?</h2>
+          <p>Descubre funcionalidades que te ayudan a organizar tu trabajo de manera eficiente</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-sort-amount-down" aria-hidden="true"></i></div>
+            <h3>Organizar por prioridad</h3>
+            <p>Crea y organiza tareas por prioridad y fecha límite para enfocarte en lo que importa.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></div>
+            <h3>Marcar como completadas</h3>
+            <p>Marca tareas como completadas, pendientes y mira el estado de tu progreso claro.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></div>
+            <h3>Resumen de progreso</h3>
+            <p>Visualiza tu avance y las próximas tareas pendientes de un vistazo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta full-bleed">
+      <div class="container">
+        <h2>¿Listo para mejorar tu productividad?</h2>
+        <p>Únete y comienza a organizar tus tareas de manera más eficiente con nuestro gestor.</p>
+        <div class="cta-buttons">
+          <a class="btn btn-light" routerLink="/auth">Registrarse Gratis</a>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <!-- SOLO USUARIOS LOGUEADOS -->
+  <section class="summary" *ngIf="auth.isLoggedIn()">
+    <div class="container">
+      <div class="summary-card">
+        <div class="summary-head">
+          <div class="hello">Hola, <b>{{ userName }}</b> 👋</div>
+          <a class="btn btn-light" routerLink="/dashboard">Ir al Dashboard</a>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-num">{{ kpiToday }}</div>
+            <div class="kpi-label">Vence hoy</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-num">{{ kpiWeek }}</div>
+            <div class="kpi-label">Esta semana</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-num">{{ kpiOverdue }}</div>
+            <div class="kpi-label">Atrasadas</div>
+          </div>
+        </div>
+
+        <div class="badges">
+          <span class="badge">Total: <b>{{ counts.total }}</b></span>
+          <span class="badge">Pendientes: <b>{{ counts.pending }}</b></span>
+          <span class="badge">Completadas: <b>{{ counts.done }}</b></span>
+        </div>
+
+        <div *ngIf="counts.total > 0" class="progress-wrap">
+          <div class="progress">
+            <div class="progress-bar"
+                 [style.width.%]="progress.pct"
+                 [ngClass]="{ ok: progress.tone==='ok', mid: progress.tone==='mid', low: progress.tone==='low' }">
+            </div>
+          </div>
+          <div class="progress-label">
+            {{ counts.done }} de {{ counts.total }} ({{ progress.pct }}%) completadas
+          </div>
+        </div>
+
+        <!-- Tarea rápida -->
+        <form class="quick-form" [formGroup]="quickForm" (ngSubmit)="addQuickTask()">
+          <input class="input" formControlName="title" placeholder="Crear tarea rápida..." aria-label="Título de la tarea" />
+          <select class="input" formControlName="priority" aria-label="Prioridad">
+            <option value="low">🟢 Baja</option>
+            <option value="med">🟡 Media</option>
+            <option value="high">🔴 Alta</option>
+          </select>
+          <input class="input" type="date" formControlName="dueDate" aria-label="Fecha límite" />
+          <button class="btn" type="submit" [disabled]="quickForm.invalid">Agregar</button>
+        </form>
+
+        <div class="grid mt-3">
+          <div>
+            <h4 class="box-title">Próximas (7 días)</h4>
+            <ul class="list-simple">
+              <li *ngFor="let t of soonTasks">
+                <span class="title">{{ t.title }}</span>
+                <span class="pill warn">vence: {{ t.dueDate | date:'shortDate' }}</span>
+                <span class="pill">{{ t.priority === 'high' ? '🔴 Alta' : t.priority === 'med' ? '🟡 Media' : '🟢 Baja' }}</span>
+              </li>
+              <li *ngIf="soonTasks.length === 0" class="muted">Sin tareas próximas.</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="box-title">Últimas creadas</h4>
+            <ul class="list-simple">
+              <li *ngFor="let t of recentTasks">
+                <span class="title">{{ t.title }}</span>
+                <span class="muted small">{{ t.createdAt | date:'short' }}</span>
+              </li>
+              <li *ngIf="recentTasks.length === 0" class="muted">Aún no has creado tareas.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+
+
+
+

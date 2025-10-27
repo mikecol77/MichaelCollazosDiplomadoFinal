@@ -1,0 +1,69 @@
+:root {
+  --primary: #2563eb;
+  --bg: #f5f7fb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --white: #ffffff;
+  --success: #16a34a;
+  --danger: #dc2626;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, Arial, sans-serif; background: var(--bg); color: var(--text); }
+.container { max-width: 980px; margin: 24px auto; padding: 0 16px; }
+.card { background: var(--white); border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); }
+.btn { background: var(--primary); border: 0; color: #fff; padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: transform .05s ease, box-shadow .2s ease; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(37,99,235,0.18); }
+.btn:disabled { opacity: .6; cursor: not-allowed; box-shadow:none; transform:none; }
+.btn.secondary { background: #374151; }
+.btn.success { background: var(--success); }
+.btn.danger { background: var(--danger); }
+.input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 10px; outline: none; transition: box-shadow .15s ease, border .15s ease; }
+.input:focus { border-color: #93c5fd; box-shadow: 0 0 0 4px rgba(59,130,246,.15); }
+label { display: block; margin: 12px 0 6px; font-weight: 600; }
+.error { color: var(--danger); font-size: 0.85rem; margin-top: 4px; }
+.alert { padding: 10px 12px; border-radius: 10px; margin: 8px 0; }
+.alert.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.space-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mt-4 { margin-top: 16px; }
+
+/* Nav links: estado normal/activo */
+.nav .nav-link {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.nav .nav-link.active {
+  background: rgba(37,99,235,.12);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Botón de logout tipo "ghost" (no llama tanto la atención) */
+.btn.ghost {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+.btn.ghost:hover {
+  background: #f3f4f6;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ----------------- Tema oscuro básico ----------------- */
+body.dark {
+  --bg: #0f172a;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --white: #111827;
+  background: var(--bg);
+  color: var(--text);
+}
+body.dark .card { background: var(--white); border-color: #374151; }
+body.dark nav { background: var(--white); border-color: #374151; }
+body.dark .input { background:#0b1220; color:#e5e7eb; border-color:#334155; }
+body.dark .btn.ghost { color:#e5e7eb; border-color:#334155; }
+body.dark .nav .nav-link.active { background: rgba(59,130,246,.18); color:#93c5fd; }

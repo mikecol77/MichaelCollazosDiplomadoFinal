@@ -1,0 +1,88 @@
+:host { display: block; }
+
+/* Header fijo y por encima de cualquier overlay */
+.app-header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: saturate(150%) blur(6px);
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Contenedor del header (independiente de .container de la landing) */
+.app-header .container{
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Marca */
+.brand{
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+
+/* Navegación */
+.nav{ display: flex; gap: 16px; align-items: center; }
+
+/* Estilos de links en el header */
+.nav a,
+.nav a:visited{
+  color: #111827;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.nav a:hover{
+  background: #f3f4f6;
+}
+
+.nav a.active{
+  background: #eef2ff;
+  color: #3730a3;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03) inset;
+}
+
+/* Botones */
+.btn{
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-login{
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-login:hover{
+  filter: brightness(0.95);
+}
+
+.btn-logout{
+  background: #111827;
+  color: #fff;
+}
+
+.btn-logout:hover{
+  filter: brightness(1.05);
+}
+
+/* Texto blanco explícito para el botón de 'Iniciar sesión' */
+.login-btn,
+.login-btn:visited,
+.login-btn:focus,
+.login-btn:hover {
+  color: #fff !important;
+}

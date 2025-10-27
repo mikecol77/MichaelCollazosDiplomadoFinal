@@ -1,0 +1,29 @@
+<header class="app-header">
+  <div class="container">
+      <a
+      class="brand"
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+>
+      MichaelCollazosDiplomadoFinal
+      </a>
+
+
+    <nav class="nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+
+      <a *ngIf="auth.isLoggedIn()" routerLink="/calendar" routerLinkActive="active">Calendario</a>
+      <a *ngIf="auth.isLoggedIn()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a *ngIf="auth.isLoggedIn()" routerLink="/perfil" routerLinkActive="active">Perfil</a>
+
+      <a *ngIf="!auth.isLoggedIn()" class="btn btn-login" routerLink="/auth" class="btn btn-primary login-btn">Iniciar sesión</a>
+      <button *ngIf="auth.isLoggedIn()" class="btn btn-logout" (click)="onLogout($event)">Cerrar sesión</button>
+    </nav>
+  </div>
+</header>
+
+
+
+
+

@@ -1,0 +1,117 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Encabezado -->
+    <div class="login-header">
+      <div class="logo">Gestor De Tareas Diplomado</div>
+      <h1>{{ isLogin ? 'Iniciar Sesión' : 'Crear Cuenta' }}</h1>
+      <p>{{ isLogin ? 'Accede a tu gestor de tareas' : 'Regístrate para empezar a organizarte' }}</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="isLogin" (click)="toggle('login')">Iniciar sesión</button>
+      <button class="tab" [class.active]="!isLogin" (click)="toggle('register')">Registrarse</button>
+    </div>
+
+    <!-- Mensajes globales -->
+    <div class="alert success" *ngIf="msg">{{ msg }}</div>
+    <div class="alert error" *ngIf="err">{{ err }}</div>
+
+    <!-- ================= LOGIN ================= -->
+    <form *ngIf="isLogin" class="login-form" (ngSubmit)="onLogin()" [formGroup]="loginForm" novalidate>
+      <div class="demo-credentials">
+        <h3>Credenciales de demostración</h3>
+        <p><b>Usuario:</b> demo&#64;demo.com</p>
+        <p><b>Contraseña:</b> 123456</p>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="Ingresa tu correo electrónico" />
+        <div class="error" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+          Debes ingresar un email válido.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="Ingresa tu contraseña (mínimo 6 caracteres)" />
+        <div class="error" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+          Mínimo 6 caracteres.
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">Iniciar Sesión</button>
+
+      <div class="switch-hint">
+        ¿No tienes cuenta?
+        <a href="" (click)="$event.preventDefault(); toggle('register')">Regístrate</a>
+      </div>
+    </form>
+
+    <!-- ================= REGISTRO ================= -->
+    <form *ngIf="!isLogin" class="login-form" (ngSubmit)="onRegister()" [formGroup]="registerForm" novalidate>
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input
+          id="name"
+          type="text"
+          class="form-control"
+          formControlName="name"
+          placeholder="Tu nombre" />
+        <div class="error" *ngIf="registerForm.controls.name.touched && registerForm.controls.name.invalid">
+          Requerido (mínimo 2).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Correo electrónico</label>
+        <input
+          id="regEmail"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="correo@dominio.com" />
+        <div class="error" *ngIf="registerForm.controls.email.touched && registerForm.controls.email.invalid">
+          Email válido es requerido.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Contraseña</label>
+        <input
+          id="regPassword"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="mínimo 6 caracteres" />
+        <div class="error" *ngIf="registerForm.controls.password.touched && registerForm.controls.password.invalid">
+          Mínimo 6 caracteres.
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="registerForm.invalid">Crear cuenta</button>
+
+      <div class="switch-hint">
+        ¿Ya tienes cuenta?
+        <a href="" (click)="$event.preventDefault(); toggle('login')">Inicia sesión</a>
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      &copy; 2025 Gestor De Tareas - Todos los derechos reservados
+    </div>
+  </div>
+</div>
+

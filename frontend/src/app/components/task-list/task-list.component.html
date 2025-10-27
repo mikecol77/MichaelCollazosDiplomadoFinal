@@ -1,0 +1,169 @@
+<div class="card">
+  <div class="space-between">
+    <h3 style="margin:0;">Mis Tareas</h3>
+    <div style="font-size:.9rem;color:var(--muted);">
+      Total: <b>{{ counts.total }}</b> · Pendientes: <b>{{ counts.pending }}</b> · Completadas: <b>{{ counts.done }}</b>
+    </div>
+  </div>
+
+    <!-- Barra de progreso -->
+  <div *ngIf="counts.total > 0" class="progress-wrap mt-2">
+    <div class="progress">
+      <div
+        class="progress-bar"
+        [style.width.%]="progress.pct"
+        [ngClass]="{
+          ok: progress.tone === 'ok',
+          mid: progress.tone === 'mid',
+          low: progress.tone === 'low'
+        }"
+      ></div>
+    </div>
+    <div class="progress-label">
+      {{ counts.done }} de {{ counts.total }} ({{ progress.pct }}%) completadas
+    </div>
+  </div>
+
+
+  <!-- Búsqueda y orden -->
+  <div class="row mt-3">
+    <input class="input" [formControl]="searchCtrl" placeholder="Buscar por título..." />
+    <select class="input" style="max-width:210px" [formControl]="sortCtrl">
+      <option value="recent">Más recientes</option>
+      <option value="az">A–Z</option>
+      <option value="due">Vencimiento primero</option>
+      <option value="priority">Prioridad alta primero</option>
+    </select>
+    <button class="btn danger" (click)="clearCompleted()">Limpiar completadas</button>
+  </div>
+
+<!-- BEGIN: Notificaciones + Intervalo -->
+<div class="tools-row">
+  <div class="reminder-group">
+    <label for="reminder">Recordarme:</label>
+    <select
+      id="reminder"
+      class="nice-select"
+      [formControl]="reminderCtrl"
+      (change)="onChangeReminder()"
+    >
+      <option [value]="0">Desactivado</option>
+      <option [value]="300000">Cada 5 minutos</option>
+      <option [value]="3600000">Cada 1 hora</option>
+      <option [value]="18000000">Cada 5 horas</option>
+      <option [value]="28800000">Cada 8 horas</option>
+      <option [value]="86400000">Cada 24 horas</option>
+    </select>
+  </div>
+
+  <ng-container *ngIf="!notifEnabled; else enabledBtns">
+    <button type="button" class="btn-light" (click)="enableNotifications()">🔔 Activar notificaciones</button>
+  </ng-container>
+  <ng-template #enabledBtns>
+    <button type="button" class="btn-light" (click)="testNotification()">Probar notificación</button>
+  </ng-template>
+</div>
+
+  <!-- Crear tarea -->
+<div class="row mt-3 task-form">
+  <input
+    class="input task-control"
+    [formControl]="titleCtrl"
+    placeholder="Nueva tarea (ej: Llamar al cliente)"
+    aria-label="Título de la tarea"
+  />
+
+  <!-- Selector de prioridad con ayuda -->
+  <div class="stack" style="max-width:150px">
+    <select
+      id="prioritySelect"
+      class="input task-control"
+      [formControl]="priorityCtrl"
+      title="Establece la prioridad de tu tarea"
+      aria-label="Prioridad de la tarea"
+      aria-describedby="priorityHelp"
+    >
+      <option value="low">🟢 Baja</option>
+      <option value="med">🟡 Media</option>
+      <option value="high">🔴 Alta</option>
+    </select>
+    <small id="priorityHelp" class="hint">Establece la prioridad de tu tarea</small>
+  </div>
+
+  <!-- Fecha límite con ayuda -->
+  <div class="stack" style="max-width:180px">
+    <input
+      id="dueInput"
+      class="input task-control"
+      [formControl]="dueCtrl"
+      type="date"
+      title="Establece la fecha límite de tu tarea"
+      aria-label="Fecha límite de la tarea"
+      aria-describedby="dueHelp"
+      placeholder="dd/mm/aaaa"
+    />
+    <small id="dueHelp" class="hint">Establece la fecha límite de tu tarea</small>
+  </div>
+
+  <button class="btn task-control" (click)="addTask()" [disabled]="titleCtrl.invalid">
+    Agregar
+  </button>
+</div>
+
+  <!-- Validación -->
+  <div class="error" *ngIf="titleCtrl.touched && titleCtrl.invalid">
+    <ng-container *ngIf="titleCtrl.errors?.['required']">Este campo es obligatorio.</ng-container>
+    <ng-container *ngIf="titleCtrl.errors?.['minlength']">Debe tener al menos 2 caracteres.</ng-container>
+  </div>
+
+  <!-- Filtros -->
+  <div class="row mt-3">
+    <button class="btn" [class.secondary]="filter!=='all'" (click)="setFilter('all')">Todas</button>
+    <button class="btn" [class.secondary]="filter!=='pending'" (click)="setFilter('pending')">Pendientes</button>
+    <button class="btn" [class.secondary]="filter!=='done'" (click)="setFilter('done')">Completadas</button>
+  </div>
+
+  <div class="alert error mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+  <div class="mt-3" *ngIf="loading">Cargando...</div>
+
+  <!-- Lista -->
+  <ul style="list-style:none;padding:0;margin-top:12px;">
+    <li *ngFor="let t of viewTasks" class="row card" style="margin-bottom:10px; align-items:center;">
+      <div style="flex:1;">
+        <!-- Ver -->
+        <ng-container *ngIf="editId !== t._id; else editBlock">
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div>
+              <strong [style.textDecoration]="t.done ? 'line-through' : 'none'">{{ t.title }}</strong>
+              <span class="chip" [ngClass]="{'chip-low': t.priority==='low', 'chip-med': t.priority==='med', 'chip-high': t.priority==='high'}">
+                {{ t.priority === 'high' ? 'Alta' : t.priority === 'med' ? 'Media' : 'Baja' }}
+              </span>
+              <span *ngIf="t.dueDate" class="due-badge" [class.overdue]="isOverdue(t)">
+                vence: {{ t.dueDate | date: 'shortDate' }}
+              </span>
+            </div>
+          </div>
+          <div style="color:var(--muted); font-size:.85rem;">{{ t.createdAt | date:'short' }}</div>
+        </ng-container>
+
+        <!-- Editar título -->
+        <ng-template #editBlock>
+          <input class="input" [formControl]="editCtrl" />
+          <div class="row mt-2">
+            <button class="btn success" (click)="saveEdit(t)" [disabled]="editCtrl.invalid">Guardar</button>
+            <button class="btn secondary" (click)="cancelEdit()">Cancelar</button>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="row" *ngIf="editId !== t._id">
+        <button class="btn" (click)="startEdit(t)">Editar</button>
+        <button class="btn success" (click)="toggleDone(t)">{{ t.done ? 'Marcar pendiente' : 'Marcar completada' }}</button>
+        <button class="btn danger" (click)="deleteTask(t)">Eliminar</button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+

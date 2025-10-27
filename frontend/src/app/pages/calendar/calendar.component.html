@@ -1,0 +1,60 @@
+<div class="cal-wrapper">
+  <div class="cal-header">
+    <button class="nav-btn" (click)="prevMonth()">«</button>
+    <div class="title">{{ monthLabel() | titlecase }}</div>
+    <button class="nav-btn" (click)="nextMonth()">»</button>
+    <button class="today-btn" (click)="goToday()">Hoy</button>
+  </div>
+
+  <div class="cal-grid">
+    <!-- Cabecera díass -->
+    <div class="dow" *ngFor="let d of dayNames">{{ d }}</div>
+
+    <!-- Celdas -->
+    <ng-container *ngFor="let week of weeks">
+      <div
+        class="cell"
+        *ngFor="let c of week"
+        [class.out]="!c.inMonth"
+        [class.today]="isToday(c)"
+        (click)="openDay(c)"
+      >
+        <div class="num">{{ c.inMonth ? c.date.getDate() : '' }}</div>
+
+        <div class="badges" *ngIf="c.tasks.length">
+          <span class="badge count">{{ c.tasks.length }}</span>
+          <span class="badge high" *ngIf="hasHigh(c)">Alta</span>
+          <span class="badge med"  *ngIf="hasMed(c)">Media</span>
+          <span class="badge low"  *ngIf="hasLow(c)">Baja</span>
+        </div>
+
+        <ul class="preview" *ngIf="c.tasks.length">
+          <li *ngFor="let t of c.tasks | slice:0:2">
+            {{ t.title }}
+          </li>
+          <li *ngIf="c.tasks.length > 2">+{{ c.tasks.length - 2 }} más…</li>
+        </ul>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Panel lateral / inferior con la selección -->
+  <div class="side" *ngIf="selectedKey">
+    <div class="side-title">
+      Tareas del <b>{{ selectedKey }}</b>
+    </div>
+
+    <div class="task-card" *ngFor="let t of selectedTasks">
+      <div class="task-title" [class.done]="t.done">{{ t.title }}</div>
+      <div class="meta">
+        <span class="chip" [class.h]="t.priority==='high'" [class.m]="t.priority==='med'" [class.l]="t.priority==='low'">
+          {{ t.priority || 'low' | titlecase }}
+        </span>
+        <span class="chip gray" *ngIf="t.done">Completada</span>
+      </div>
+    </div>
+
+    <div class="hint" *ngIf="!selectedTasks.length">No hay tareas para este día.</div>
+  </div>
+</div>
+
