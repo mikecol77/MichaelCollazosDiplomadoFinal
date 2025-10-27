@@ -144,22 +144,6 @@ npm start        # ng serve
 npm run build    # ng build
 ```
 
-
-## 🧪 Checklist de aceptación
-
-* [x] Repositorio con `/backend` y `/frontend`, cada uno con su `package.json`, `.env.example` y `README.md`.
-* [x] **Angular Router** con rutas: `/` (Inicio), `/auth` (Login/Registro), `/dashboard` (privada), `/perfil` (privada) y **`/calendar`** (privada).
-* [x] `<router-outlet>` en `AppComponent`.
-* [x] Componentes: `Navbar`, `Auth`, `Dashboard`, `TaskList`, `Home`, `Profile`, `Calendar`.
-* [x] Servicios HTTP a los endpoints (login, register, tasks CRUD).
-* [x] Formularios reactivos con validaciones (registro, login, crear/editar tareas).
-* [x] Token + datos básicos guardados en `localStorage`.
-* [x] AuthGuard para rutas privadas.
-* [x] CRUD mínimo de tareas del usuario autenticado.
-* [x] Data binding con `*ngFor`; tarjetas/tabla para mostrar tareas.
-* [x] Conexión Frontend ↔ Backend funcionando.
-* [x] README claros y pasos para ejecutar localmente.
-
 ---
 
 ## ❗ Troubleshooting
