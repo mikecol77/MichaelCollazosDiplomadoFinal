@@ -1,0 +1,13 @@
+# dependencias
+node_modules/
+
+# cachés/build de Angular/Webpack
+.angular/
+angular-webpack/
+babel-webpack/
+dist/
+tmp/
+
+# (opcional) .env locales
+.env
+.env.*.local
