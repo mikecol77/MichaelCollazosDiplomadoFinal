@@ -55,7 +55,7 @@ Crea `.env` a partir de `.env.example`:
 MONGO_URI=mongodb://127.0.0.1:27017/michaelcollazos_final
 JWT_SECRET=cambia_este_valor_por_uno_largo_y_unico
 PORT=4000
-CLIENT_ORIGIN=[http://localhost:4200](http://localhost:4200)
+CLIENT_ORIGIN=http://localhost:4200
 
 ````
 
