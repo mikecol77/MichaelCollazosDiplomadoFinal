@@ -17,6 +17,8 @@ Crea un archivo `.env` a partir de `.env.example`:
 
 ```env
 MONGO_URI=mongodb://127.0.0.1:27017/michaelcollazos_final
+# Opción B: MongoDB Atlas (reemplaza <user>, <password>, <cluster>, <db>, <appName>)
+# MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.<id>.mongodb.net/<db>?retryWrites=true&w=majority&appName=<appName>
 JWT_SECRET=cambia_este_valor_por_uno_largo_y_unico
 PORT=4000
 CLIENT_ORIGIN=http://localhost:4200
