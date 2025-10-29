@@ -175,35 +175,3 @@ npm run build      # ng build (compilación de producción)
 * **Email:** `demo@demo.com`
 * **Password:** `123456`
   *(Si no existe, regístralo desde `/auth` o crea la semilla en el backend si tienes script.)*
-
----
-
-## 🛫 Despliegue (resumen)
-
-1. Ajusta `environment.prod.ts` con la URL del backend público.
-2. Compila:
-
-   ```bash
-   npm run build
-   ```
-3. Sube la carpeta `dist/` a tu hosting (Netlify, Firebase Hosting, etc.).
-4. Configura **redirecciones SPA** (en Netlify, `_redirects`: `/*   /index.html   200`).
-
----
-
-## ✅ Checklist (Frontend)
-
-* [ ] `environment.apiUrl` correcto.
-* [ ] Rutas: `/`, `/auth`, `/dashboard`, `/perfil`, `/calendario`.
-* [ ] `<router-outlet>` presente.
-* [ ] `AuthGuard` protegiendo rutas privadas.
-* [ ] Formularios reactivos (registro/login/crear tarea).
-* [ ] Token + user en `localStorage`.
-* [ ] TaskList con búsqueda/filtro/orden y acciones.
-* [ ] Calendario muestra solo el mes visible.
-* [ ] Notificaciones configuradas (si se usan).
-
----
-
-```
-```
